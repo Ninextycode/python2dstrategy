@@ -5,8 +5,9 @@ import game_objects as g_o
 
 
 def generate_forest(frequency, n_clean):
-    width = g_d.size[0] // (g_o.Tree.radius * 2)
-    height = g_d.size[1] // (g_o.Tree.radius * 2)
+    g_d.forest_grid_cell_side = (g_o.Tree.radius * 2)
+    width = g_d.size[0] // g_d.forest_grid_cell_side
+    height = g_d.size[1] // g_d.forest_grid_cell_side
     g_d.forest_grid = [[False for y in range(height)] for x in range(width)]
     fill_random(frequency)
     for i in range(n_clean):

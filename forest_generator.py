@@ -1,4 +1,5 @@
 from random import random
+import numpy as np
 
 import game_data as g_d
 import game_objects as g_o
@@ -12,6 +13,13 @@ def generate_forest(frequency, n_clean):
     fill_random(frequency)
     for i in range(n_clean):
         clean()
+
+    for x in range(len(g_d.forest_grid)):
+        for y in range(len(g_d.forest_grid[0])):
+            if g_d.forest_grid[x][y]:
+                g_o.Tree(
+                    np.asarray(
+                        (x*g_d.forest_grid_cell_side, y * g_d.forest_grid_cell_side)) + g_d.forest_grid_cell_side/2)
 
 
 def fill_random(frequency):

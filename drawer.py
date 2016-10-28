@@ -1,5 +1,8 @@
 import game_data as g_d
+import neural_networking as n_n
+import matplotlib.pyplot as plt
 
+def initialise_matplotlib
 
 def draw_game_surface():
     g_d.screen.fill((220, 220, 220))
@@ -10,6 +13,8 @@ def draw_game_surface():
         soldier.draw(g_d.screen)
     for bullet in g_d.bullets:
         bullet.draw(g_d.screen)
+
+
 
 
 def draw_graphs():

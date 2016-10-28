@@ -21,3 +21,14 @@ def is_position_in_forest(position):
 
     return x_f >= 0 and y_f >= 0 and x_f < len(g_d.forest_grid) and y_f < len(g_d.forest_grid[0]) and\
         g_d.forest_grid[x_f][y_f]
+
+
+def soldier_in_field_view(solder_looking):
+    for soldier in g_d.soldiers:
+        if soldier is not solder_looking and \
+                soldier.team != solder_looking.team and \
+                0 < \
+                    magnitude(soldier.position - solder_looking.position) <= \
+                        (soldier.radius + solder_looking.field_of_view_radius):
+            return soldier
+    return None

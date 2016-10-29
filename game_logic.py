@@ -1,5 +1,7 @@
 import numpy as np
 import pygame
+import sys
+
 
 import game_objects as g_o
 import game_data as g_d
@@ -8,8 +10,15 @@ import forest_generator as f_g
 
 
 def initialise():
-    initialise_pygame()
+    if not (g_d.graphs_mode or g_d.image_mode):
+        sys.exit()
+
+    if g_d.image_mode:
+        initialise_pygame()
     initialise_test()
+
+    if g_d.graphs_mode:
+        drawer.initialise_matplotlib()
 
 def initialise_test():
     f_g.generate_forest(0.55, 4)
@@ -33,10 +42,13 @@ def initialise_pygame():
 
 
 def iteration():
-    check_events()
+    if g_d.image_mode:
+        check_events()
     update_objects()
-    drawer.draw_game_surface()
-    drawer.draw_graphs()
+    if g_d.image_mode:
+        drawer.draw_game_surface()
+    if g_d.graphs_mode:
+        drawer.draw_graphs()
 
 def update_objects():
     for soldier in g_d.soldiers:

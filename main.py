@@ -8,8 +8,13 @@ g_l.initialise()
 while not g_d.done:
     g_l.iteration()
 
-    pygame.display.update()
-    g_d.delta_time = g_d.clock.tick(20)
+    if g_d.image_mode:
+        pygame.display.update()
 
-# close the window and quit
-pygame.quit()
+    if g_d.graphs_mode:
+        g_d.delta_time = 100
+    else:
+        g_d.delta_time = g_d.clock.tick(20)
+
+if g_d.image_mode:
+    pygame.quit()

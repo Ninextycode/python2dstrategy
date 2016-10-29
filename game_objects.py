@@ -168,7 +168,7 @@ class Bullet:
 
 
 class Tree:
-    radius = 8
+    radius = 5
     color = (0, 0xff, 0)
 
     def __init__(self, position):

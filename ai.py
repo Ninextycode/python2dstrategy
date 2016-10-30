@@ -7,7 +7,7 @@ import collision_detection as c_d
 
 
 class AI:
-    n_hidden_layers = 3
+    n_hidden_layers = 2
 
     def __init__(self, team, net = None):
         self.last_targeting_data = np.zeros(n_n.get_field_size_for_soldiers())
@@ -38,9 +38,9 @@ class AI:
         shift = g_o.Soldier.radius
 
         for i in range(len(indexes)):
-            y = indexes[i] // field_size[0]
-            x = indexes[i] % field_size[0]
-            target = np.asarray((x, y)) + shift
+            x = indexes[i] % field_size[1]
+            y = indexes[i] // field_size[1]
+            target = np.asarray((x, y)) * g_o.Soldier.diameter + shift
 
             soldier = c_d.get_closest_among_given(target, my_soldiers)
             soldier.set_target(target)

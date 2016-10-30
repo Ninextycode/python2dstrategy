@@ -33,6 +33,10 @@ def initialise_matplotlib():
         subplot.set_xticklabels([])
         subplot.set_yticklabels([])
 
+    for subplot in subplots_targets:
+        subplot.set_xticklabels([])
+        subplot.set_yticklabels([])
+
     plt.draw()
     graphs_figure.canvas.mpl_connect('close_event', handle_close)
 

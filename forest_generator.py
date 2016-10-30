@@ -5,7 +5,10 @@ import game_data as g_d
 import game_objects as g_o
 
 
-def generate_forest(frequency, n_clean):
+def generate_forest():
+    frequency = g_d.forest_rate
+    n_clean = 4
+
     g_d.forest_grid_cell_side = (g_o.Tree.radius * 2)
     width = g_d.size[0] // g_d.forest_grid_cell_side
     height = g_d.size[1] // g_d.forest_grid_cell_side

@@ -8,12 +8,13 @@ import collision_detection as c_d
 
 class Soldier:
     radius = 5
+    diameter = radius * 2
     field_of_view_radius = 80
 
     in_forest_speed = 15
     in_forest_evade_chance = 0.70
     default_life_level = 100
-    out_forest_speed = 50
+    out_forest_speed = 30
     out_forest_evade_chance = 0.05
 
     colors = [np.asarray((0, 0, 0xff)), np.asarray((0xff, 0, 0))]
@@ -85,7 +86,6 @@ class Soldier:
         self.speed = Soldier.out_forest_speed
         self.evade_chance = Soldier.out_forest_evade_chance
         self.color = Soldier.colors[self.team]
-
 
     def try_shoot(self):
         soldier_in_field_view = c_d.soldier_in_field_view(self)

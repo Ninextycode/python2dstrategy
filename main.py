@@ -6,7 +6,7 @@ import game_logic as g_l
 
 def compete():
     g_l.initialise()
-
+    print_counter = 0
     while not g_d.done:
         g_l.iteration()
 
@@ -16,9 +16,12 @@ def compete():
         g_d.delta_time = 100
         g_d.time_left -= g_d.delta_time
 
-        print(g_d.time_left / 1000, g_d.team_size)
+        print_counter += 1
+        if print_counter >= 5:
+            print_counter = 0
+            print(g_d.time_left / 1000, g_d.team_size)
 
-        g_d.done = g_d.time_left <= 0 or g_d.team_size[0] <= 0 or  g_d.team_size[1] <=0
+        # g_d.done = g_d.time_left <= 0 or g_d.team_size[0] <= 0 or  g_d.team_size[1] <=0
 
     if g_d.image_mode:
         pygame.quit()

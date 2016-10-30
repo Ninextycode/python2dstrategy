@@ -24,26 +24,25 @@ def initialise():
 
 
 def initialise_test():
-    f_g.generate_forest(0.55, 4)
+    f_g.generate_forest()
 
     generate_squad(g_o.Soldier.radius, g_o.Soldier.radius, 3, 10, 0, g_d.size / 2)
     generate_squad(g_d.size[0] / 2, g_d.size[0] / 2, 3, 10, 1, g_d.size / 2 + np.asarray([0, 25]))
 
 
 def initialize_2_teams():
-    f_g.generate_forest(0.0, 4)
+    f_g.generate_forest()
     squad_size = np.asarray((16, 2))
 
-    generate_squad((0, 0), squad_size, g_d.teams[0])
-    offset = squad_size * g_o.Soldier.radius * 2
-    generate_squad(g_d.size - offset, squad_size, g_d.teams[1])
+    generate_squad((0, 0), squad_size, 0)
+    offset = squad_size * g_o.Soldier.diameter
+    generate_squad(g_d.size - offset, squad_size, 1)
 
 
-def generate_squad(top, shape, team, target = None):
-    soldier_d = g_o.Soldier.radius * 2
+def generate_squad(top, shape, team, target=None):
     for x_l in range(shape[0]):
         for y_l in range(shape[1]):
-            offset = np.asarray([x_l * soldier_d, y_l * soldier_d]) + g_o.Soldier.radius
+            offset = np.asarray([x_l * g_o.Soldier.diameter, y_l * g_o.Soldier.diameter]) + g_o.Soldier.radius
             s = g_o.Soldier(np.asarray(top) + offset, team)
             if target is not None:
                 s.set_target(np.asarray(target) + offset)
@@ -57,7 +56,7 @@ def initialise_pygame():
 
 
 def initialise_ai():
-    for team in g_d.teams:
+    for team in range(g_d.n_teams):
         g_d.AIs.append(ai.AI(team))
 
 

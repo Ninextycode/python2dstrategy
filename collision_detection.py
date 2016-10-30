@@ -32,3 +32,16 @@ def soldier_in_field_view(solder_looking):
                         (soldier.radius + solder_looking.field_of_view_radius):
             return soldier
     return None
+
+
+def get_closest_among_given(position, objects):
+    closest = objects[0]
+    position = np.asarray(position)
+
+    closest_dist = magnitude(position - closest.position)
+    for object in objects[1:]:
+        local_dist =  magnitude(object.position - position)
+        if local_dist < closest_dist:
+            closest_dist = local_dist
+            closest = object
+    return closest

@@ -11,12 +11,12 @@ class Soldier:
     field_of_view_radius = 80
 
     in_forest_speed = 15
-    in_forest_evade_chance = 0.60
+    in_forest_evade_chance = 0.70
     default_life_level = 100
     out_forest_speed = 50
-    out_forest_evade_chance = 0.10
+    out_forest_evade_chance = 0.05
 
-    colors = [(0, 0, 0x77), (0x77, 0, 0)]
+    colors = [np.asarray((0, 0, 0xff)), np.asarray((0xff, 0, 0))]
 
     general_reload_time = 0.5
 
@@ -31,7 +31,9 @@ class Soldier:
 
         self.set_state_by_forest()
         self.time_to_reload = 1
+
         g_d.soldiers.append(self)
+        g_d.team_size[self.team] += 1
 
     def set_target(self, target):
         self.target = np.asarray(target, dtype=float)
@@ -77,12 +79,12 @@ class Soldier:
     def in_forest(self):
         self.speed = Soldier.in_forest_speed
         self.evade_chance = Soldier.in_forest_evade_chance
-        self.color = self.color = Soldier.colors[self.team]
+        self.color = Soldier.colors[self.team] // 2
 
     def out_forest(self):
         self.speed = Soldier.out_forest_speed
         self.evade_chance = Soldier.out_forest_evade_chance
-        (Soldier.colors[self.team][0] * 2, Soldier.colors[self.team][1] * 2, Soldier.colors[self.team][2] * 2)
+        self.color = Soldier.colors[self.team]
 
 
     def try_shoot(self):
@@ -106,7 +108,12 @@ class Soldier:
         if self.evade_chance < random():
             self.life -= damage
             if self.life <= 0:
-                g_d.object_to_delete.append(self)
+                self.die()
+
+    def die(self):
+        if self.life >= 0: # may be killed 2 times in 1 iteration
+            g_d.team_size[self.team] -= 1
+        g_d.object_to_delete.append(self)
 
     def is_in_forest(self):
         return c_d.is_position_in_forest(self.position)

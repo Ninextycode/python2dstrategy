@@ -9,23 +9,24 @@ import collision_detection as c_d
 class AI:
     n_hidden_layers = 2
 
-    def __init__(self, team, net = None):
+    @staticmethod
+    def get_empty_net_for_ai():
+        return n_n.NeuralNet(
+            n_n.get_input_length(),
+            n_n.get_output_length(),
+            (n_n.get_input_length()) // 3 * 4,
+            AI.n_hidden_layers)
+
+    def __init__(self, team = -1, theta=None):
         self.last_targeting_data = np.zeros(n_n.get_field_size_for_soldiers())
         self.team = team
 
-        if net is not None:
-            self.net = net
+        self.net = AI.get_empty_net_for_ai()
+
+        if theta is not None:
+            self.net.set_theta(theta)
         else:
-            f_m = n_n.get_forest_matrix()
-            s_ms = n_n.get_teams_matrices()
-
-            self.net = n_n.NeuralNet(
-                n_n.get_input_length(),
-                n_n.get_output_length(),
-                (n_n.get_input_length()) // 3 * 4,
-                AI.n_hidden_layers)
-
-            self.net.set_random_theta()
+            self.net.set_random_theta(0.2)
 
     def set_targets_to_soldiers(self):
         targeting_data = self.net(self.get_input())
@@ -54,8 +55,9 @@ class AI:
         for i in range(len(teams_matrices)):
             if i != self.team:
                 input_to_concat.append(teams_matrices[i].reshape(-1))
-
-        return np.concatenate(input_to_concat, axis=0)
+        data = np.concatenate(input_to_concat, axis=0)
+        print(self.team, len(data))
+        return data
 
 
 def set_targets_from_all_ais():

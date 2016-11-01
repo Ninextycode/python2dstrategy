@@ -176,6 +176,7 @@ class Bullet:
 
 class Tree:
     radius = 5
+    diameter = radius * 2
     color = (0, 0xff, 0)
 
     def __init__(self, position):

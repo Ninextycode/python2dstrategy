@@ -7,7 +7,7 @@ import game_objects as g_o
 import game_data as g_d
 import drawer
 import forest_generator as f_g
-import ai
+import artificial_intelligence as a_i
 
 
 def initialise():
@@ -18,9 +18,6 @@ def initialise():
 
     if g_d.graphs_mode:
         drawer.initialise_matplotlib()
-
-    if g_d.use_ai:
-        initialise_ai()
 
 
 def initialise_test():
@@ -54,12 +51,6 @@ def initialise_pygame():
     pygame.display.set_caption(g_d.title)
     g_d.clock = pygame.time.Clock()
 
-
-def initialise_ai():
-    for team in range(g_d.n_teams):
-        g_d.AIs.append(ai.AI(team))
-
-
 def iteration():
     if g_d.image_mode:
         check_events()
@@ -68,8 +59,9 @@ def iteration():
         drawer.draw_game_surface()
     if g_d.graphs_mode:
         drawer.draw_graphs()
-    if g_d.use_ai:
-        ai.set_targets_from_all_ais()
+
+    a_i.set_targets_from_all_ais()
+
 
 def update_objects():
     for soldier in g_d.soldiers:

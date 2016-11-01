@@ -1,6 +1,6 @@
 import numpy as np
 np.set_printoptions(threshold=np.inf)
-
+import numpy.random as rand
 
 import game_data as g_d
 import game_objects as g_o
@@ -45,10 +45,19 @@ def get_field_size_for_soldiers():
         field_size_for_soldiers = np.asarray((xysize[1], xysize[0]))
     return field_size_for_soldiers
 
+field_size_for_forest = None
+def get_field_size_for_forest():
+    global field_size_for_forest
+    if field_size_for_forest is None:
+        xysize = np.ceil(g_d.size / g_o.Tree.diameter).astype(int)
+        field_size_for_soldiers = np.asarray((xysize[1], xysize[0]))
+    return field_size_for_soldiers
+
 
 def get_input_length():
     field_size = get_field_size_for_soldiers()
-    return field_size[0] * field_size[1] * g_d.n_teams +  len(g_d.forest_grid) *  len(g_d.forest_grid[0])
+    forest_size = get_field_size_for_forest()
+    return field_size[0] * field_size[1] * g_d.n_teams +  forest_size[0] *  forest_size[1]
 
 
 def get_output_length():
@@ -78,8 +87,8 @@ class NeuralNet:
             self.thetas.append(theta_row[start:end].reshape(self.layers_sizes[i] + 1, self.layers_sizes[i + 1]))
             start = end
 
-    def set_random_theta(self):
-        theta = self.generate_random_raw_theta(1)
+    def set_random_theta(self, max_abs_value = 1):
+        theta = self.generate_random_raw_theta(max_abs_value)
         self.set_theta(theta)
 
     def generate_random_raw_theta(self, epsilon):
@@ -91,8 +100,24 @@ class NeuralNet:
     def __call__(self, data):
         i = 0
         for theta in self.thetas:
+            print(i)
             i += 1
             data = np.append(data, 0)
+            print(data.shape, theta.shape)
             data = data @ theta
             data = NeuralNet.sigmoid(data)
         return data
+
+    def get_theta(self):
+        return np.concatenate([theta.reshape(-1) for theta in self.thetas])
+
+def mutate(theta, rate, max_change):
+    for i in range(len(theta)):
+        if rate > rand.random():
+            theta[i] += rand.random() * max_change * 2 - max_change
+
+
+def cross(theat_1, theta_2, rate):
+    for i in range(len(theat_1)):
+        if rate > rand.random():
+            theat_1[i], theta_2[i] = theta_2[i], theat_1[i]

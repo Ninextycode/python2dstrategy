@@ -17,7 +17,8 @@ class AI:
             (n_n.get_input_length()) // 3 * 4,
             AI.n_hidden_layers)
 
-    def __init__(self, team = -1, theta=None):
+    def __init__(self, name, team = -1, theta=None):
+        self.name = name
         self.last_targeting_data = np.zeros(n_n.get_field_size_for_soldiers())
         self.team = team
 
@@ -25,8 +26,6 @@ class AI:
 
         if theta is not None:
             self.net.set_theta(theta)
-        else:
-            self.net.set_random_theta(0.2)
 
     def set_targets_to_soldiers(self):
         targeting_data = self.net(self.get_input())
@@ -56,9 +55,13 @@ class AI:
             if i != self.team:
                 input_to_concat.append(teams_matrices[i].reshape(-1))
         data = np.concatenate(input_to_concat, axis=0)
-        print(self.team, len(data))
         return data
 
+    def __str__(self):
+        return "AI " + self.name
+
+    def __repr__(self):
+        return "AI " + self.name
 
 def set_targets_from_all_ais():
     for ai in g_d.AIs:

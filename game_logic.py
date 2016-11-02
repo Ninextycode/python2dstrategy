@@ -8,6 +8,7 @@ import game_data as g_d
 import drawer
 import forest_generator as f_g
 import artificial_intelligence as a_i
+import collision_detection as c_d
 
 
 def initialise():
@@ -29,11 +30,17 @@ def initialise_test():
 
 def initialize_2_teams():
     f_g.generate_forest()
-    squad_size = np.asarray((16, 2))
+    squad_size = np.asarray((15, 5))
 
-    generate_squad((0, 0), squad_size, 0)
+
+
     offset = squad_size * g_o.Soldier.diameter
-    generate_squad(g_d.size - offset, squad_size, 1)
+    generate_squad(g_d.size - offset, squad_size, 1, g_d.size / 2)
+
+    generate_squad((0, 0), squad_size, 0, g_d.size / 2)
+
+
+
 
 
 def generate_squad(top, shape, team, target=None):
@@ -51,7 +58,11 @@ def initialise_pygame():
     pygame.display.set_caption(g_d.title)
     g_d.clock = pygame.time.Clock()
 
+
+i = 0
 def iteration():
+    global i
+    c_d.set_soldiers_to_closest_enemies()
     if g_d.image_mode:
         check_events()
     update_objects()
@@ -59,11 +70,13 @@ def iteration():
         drawer.draw_game_surface()
     if g_d.graphs_mode:
         drawer.draw_graphs()
-
+    #pygame.image.save(g_d.screen, "second/"+str(i)+".png")
     a_i.set_targets_from_all_ais()
+    i+=1
 
 
 def update_objects():
+
     for soldier in g_d.soldiers:
         soldier.update(g_d.delta_time / 1000)
     for bullet in g_d.bullets:
@@ -81,9 +94,4 @@ def update_objects():
 def check_events():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            g_d.done = True
-
-
-
-
-
+            sys.exit()

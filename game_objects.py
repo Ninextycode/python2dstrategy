@@ -5,23 +5,27 @@ from random import random
 import game_data as g_d
 import collision_detection as c_d
 
-
+soldier_id = 0
 class Soldier:
-    radius = 5
+    radius = 10
     diameter = radius * 2
-    field_of_view_radius = 80
+    field_of_view_radius = 90
 
     in_forest_speed = 15
-    in_forest_evade_chance = 0.70
+    in_forest_evade_chance = 0 #0.70
     default_life_level = 100
     out_forest_speed = 30
-    out_forest_evade_chance = 0.05
+    out_forest_evade_chance = 0 #0.05
 
     colors = [np.asarray((0, 0, 0xff)), np.asarray((0xff, 0, 0))]
 
     general_reload_time = 0.5
 
     def __init__(self, position, team):
+        global soldier_id
+        self.id = soldier_id
+        soldier_id += 1
+
         self.speed = 0
         self.evade_chance = 0
         self.position = np.asarray(position, dtype=float)
@@ -69,7 +73,8 @@ class Soldier:
         self.check_move()
 
     def check_move(self):
-        self.set_state_by_forest()
+        pass
+        #self.set_state_by_forest()
 
     def set_state_by_forest(self):
         if self.is_in_forest():
@@ -88,9 +93,11 @@ class Soldier:
         self.color = Soldier.colors[self.team]
 
     def try_shoot(self):
-        soldier_in_field_view = c_d.soldier_in_field_view(self)
-        if soldier_in_field_view is not None and soldier_in_field_view.team != self.team and self.reloaded():
-            self.shoot(soldier_in_field_view.position)
+        soldier_in_field_view = g_d.closest_reachable_soldiers_map.get(self, None)
+        if soldier_in_field_view is not None and self.reloaded():
+            soldier_in_field_view.color = np.asarray((0, 0xff, 0))
+            #self.shoot(soldier_in_field_view.position)
+            soldier_in_field_view.hit(50)
 
     def reloaded(self):
         return self.time_to_reload <= 0
@@ -99,10 +106,11 @@ class Soldier:
         self.time_to_reload = Soldier.general_reload_time
         direction = target - self.position
         if direction[0] == 0 and direction[1] == 0:
-            return
-
-        direction = direction / np.sqrt(direction[0]**2 + direction[1]**2)
-        Bullet(self.position + direction * (Bullet.radius + self.radius), target, self.team)
+            direction = np.array((0, 1)) # shot down if target is exactly on soldier's position
+            Bullet(self.position + direction * (Bullet.radius + self.radius), self.position + direction, self.team)
+        else:
+            direction = direction / np.sqrt(direction[0]**2 + direction[1]**2)
+            Bullet(self.position + direction * (Bullet.radius + self.radius), target, self.team)
 
     def hit(self, damage):
         if self.evade_chance < random():
@@ -123,12 +131,15 @@ class Soldier:
         pygame.draw.circle(surface, (0, 0xff, 0), np.round(self.position).astype(int), Soldier.field_of_view_radius, 1)
 
     def draw(self, surface):
-        pygame.draw.circle(surface, (0,0,0), np.round(self.position).astype(int), Soldier.radius)
+        pygame.draw.circle(surface, (0, 0, 0), np.round(self.position).astype(int), Soldier.radius)
         pygame.draw.circle(surface, self.color, np.round(self.position).astype(int), Soldier.radius-1)
+
+    def __hash__(self):
+        return self.id
 
 
 class Bullet:
-    speed = 60
+    speed = 100
     radius = 1
     color = (0, 0, 0)
     damage = 50
@@ -157,11 +168,12 @@ class Bullet:
         self.check_borders()
 
     def check_collision(self):
-        hit_soldier = c_d.soldier_the_object_touches(self)
-        if hit_soldier is not None:
+        hit_soldiers = c_d.soldiers_the_object_touches(self)
+        if len(hit_soldiers) != 0:
             self.delete_self()
-            if hit_soldier.team != self.team:
-                hit_soldier.hit(self.damage)
+            for soldier in hit_soldiers:
+                if soldier.team != self.team:
+                    soldier.hit(self.damage)
 
     def check_borders(self):
         if self.position[0] < 0 or self.position[1] < 0 or self.position[0] > g_d.size[0] or self.position[1] > g_d.size[1]:
@@ -175,7 +187,7 @@ class Bullet:
 
 
 class Tree:
-    radius = 5
+    radius = 10
     diameter = radius * 2
     color = (0, 0xff, 0)
 

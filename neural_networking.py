@@ -81,6 +81,7 @@ class NeuralNet:
             self.set_theta(theta_row)
 
     def set_theta(self, theta_row):
+        self.thetas = []
         start = 0
         for i in range(len(self.layers_sizes)-1):
             end = start + (self.layers_sizes[i] + 1) * self.layers_sizes[i + 1]
@@ -98,12 +99,8 @@ class NeuralNet:
         return np.random.random(length)* 2 * epsilon - epsilon
 
     def __call__(self, data):
-        i = 0
         for theta in self.thetas:
-            print(i)
-            i += 1
             data = np.append(data, 0)
-            print(data.shape, theta.shape)
             data = data @ theta
             data = NeuralNet.sigmoid(data)
         return data

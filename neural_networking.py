@@ -32,7 +32,7 @@ def get_teams_matrices():
     for soldier in g_d.soldiers:
         xypos = tuple((soldier.position // g_o.Soldier.diameter).astype(int))
         rcpos = (xypos[1], xypos[0])
-        mats[soldier.team][rcpos] = 1
+        mats[soldier.team][rcpos] += 1
 
     return mats
 

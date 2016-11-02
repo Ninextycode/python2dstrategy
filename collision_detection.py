@@ -7,15 +7,6 @@ def magnitude(vector):
     return np.sqrt(vector[0]**2 + vector[1]**2)
 
 
-def soldiers_the_object_touches(obj):
-    soldiers = []
-    for soldier in g_d.soldiers:
-        if soldier is not obj and \
-                        magnitude(soldier.position - obj.position) <= (soldier.radius + obj.radius):
-            soldiers.append(soldier)
-    return soldiers
-
-
 def is_position_in_forest(position):
     x_f = np.round(position[0]).astype(int) // g_d.forest_grid_cell_side
     y_f = np.round(position[1]).astype(int) // g_d.forest_grid_cell_side

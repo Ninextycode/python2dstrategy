@@ -3,18 +3,18 @@ import numpy as np
 
 title = "WAR"
 
-size = np.asarray([800, 600])
+size = np.asarray([400, 300])
 
 n_teams = 2
 forest_grid_cell_side = 10
 
 
-forest_rate = 0 #0.53
+forest_rate = 0.53
 match_time_ms = 60 * 1000
 
+
 image_mode = True
-image_mode = True
-graphs_mode = False
+graphs_mode = True
 
 screen = None
 clock = None

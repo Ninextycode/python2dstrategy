@@ -12,8 +12,8 @@ def compete(ais):
     ais[0].team = 0
     ais[1].team = 1
 
-    #for ai in ais:
-    #    g_d.AIs.append(ai)
+    for ai in ais:
+        g_d.AIs.append(ai)
 
     print_counter = 0
     while not g_d.done:
@@ -26,11 +26,11 @@ def compete(ais):
         g_d.time_left -= g_d.delta_time
 
         print_counter += 1
-        if print_counter >= 100:
+        if print_counter >= 10:
             print_counter = 0
             print(g_d.time_left / 1000, g_d.team_size)
 
-        # g_d.done = not (g_d.time_left > 0 and g_d.team_size[0] > 0 and g_d.team_size[1] > 0)
+        g_d.done = not (g_d.time_left > 0 and g_d.team_size[0] > 0 and g_d.team_size[1] > 0)
 
     if g_d.image_mode:
         pygame.quit()

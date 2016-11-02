@@ -47,7 +47,7 @@ def draw_game_surface():
     for tree in g_d.trees:
         tree.draw(g_d.screen)
     for soldier in g_d.soldiers:
-        soldier.draw_with_field_view(g_d.screen)
+        soldier.draw(g_d.screen)
     for bullet in g_d.bullets:
         bullet.draw(g_d.screen)
 
